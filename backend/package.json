@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Contains backend and database source code for our final project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "backend",
+    "be",
+    "back-end",
+    "database",
+    "db"
+  ],
+  "author": "S. Bazinet, L. Turcotte, T. Turcotte, G. Flores",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.3",
+    "sqlite3": "^5.0.2"
+  }
+}
