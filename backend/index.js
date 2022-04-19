@@ -26,6 +26,9 @@ var dbFilled = true;
 var isLoggedIn = false; 
 var userLoggedIn = null; 
 
+// ML models 
+var cropRecClassifier = null; 
+
 
 // TODO: May need to implement access control mechanisms 
 // TODO: strongly consider splitting up endpoints into different files 
@@ -129,6 +132,39 @@ app.get('/locations', function(request, response) {
         response.status(statusCode).send(respBody); 
     }); 
 });
+
+
+app.get('/buildRecModel', function(request, response) {
+    // Build crop recommendation model using all locations currently in the database. 
+    locationBiz.buildCropRecModel(dbFilled, function(statusCode, respBody, classifier_) {
+        if (classifier_ != null) {
+            cropRecClassifier = classifier_; 
+        }
+
+        response.status(statusCode).send(respBody); 
+    }); 
+}); 
+
+
+app.get('/cropRecommendation', function(request, response) {
+    // Computes the recommended crop for a particular location already in the database. 
+    // Performs no data modifications. 
+    locationBiz.calculateRecommendedCrop(dbFilled, cropRecClassifier, request.query.longitude, request.query.latitude, 
+        function(statusCode, respBody) {
+            response.status(statusCode).send(respBody); 
+        }
+    ); 
+}); 
+
+
+app.get('/locationField', function(request, response) {
+    // Returns the value for a certain attribute (field) for a particular location. 
+    locationBiz.getField(dbFilled, request.query.longitude, request.query.latitude, request.query.field, 
+        function(statusCode, respBody) {
+            response.status(statusCode).send(respBody);
+        }
+    ); 
+}); 
 
 
 // set up the server to listen on port 4321 

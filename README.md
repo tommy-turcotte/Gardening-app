@@ -2,9 +2,10 @@
 
 ## Server-side details 
 ### Installing packages
-1. `npm install express`
-2. `npm install sqlite3`
-3. `npm install -g nodemon`
+1. `npm install -g nodemon`
+2. `npm install express`
+3. `npm install sqlite3`
+4. `npm install ml-knn`
 
 View installed packages using `npm list` (no args shows local packages (e.g., `express` and `sqlite`), `-g` to show global packages).
 

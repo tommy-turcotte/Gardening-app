@@ -37,5 +37,50 @@ function getAllLocations(send) {
 }
 
 
+function getLocation(longitude, latitude, send) {
+    // Retrieve the data for a single location
+    data.db.get('SELECT * FROM Locations WHERE longitude = ? AND latitude = ?', [longitude, latitude], 
+        (error, location) => {
+            if (!error) {
+                send(location); 
+            } else {
+                console.error('Error querying the database (getLocation): ', error);
+            }
+        }
+    ); 
+}
+
+
+function getField(longitude, latitude, field, send) {
+    // retrieve the value for a certain attribute (field) for a particular location
+    data.db.get(`SELECT ${field} FROM Locations WHERE longitude = ? AND latitude = ?`, [longitude, latitude], 
+        (error, val) => {
+            if (!error) {
+                send(val); 
+            } else {
+                console.error('Error querying the database (getField): ', error);
+            }
+        }
+    ); 
+}
+
+
+function setField(longitude, latitude, field, value) {
+    // TODO: write endpoint and biz function for this 
+    // set a certain attribute (field) to value for a particular location 
+    data.db.run(
+        `UPDATE Locations SET ${field} = ? WHERE longitude = ? AND latitude = ?`, [value, longitude, latitude], 
+        (error) => {
+            if (error) {
+                console.error('Error updating a Location in the database (setField): ', error);  
+            } 
+        }
+    ); 
+}
+
+
 module.exports.insertLocations = insertLocations; 
 module.exports.getAllLocations = getAllLocations; 
+module.exports.getLocation = getLocation; 
+module.exports.getField = getField; 
+module.exports.setField = setField; 
