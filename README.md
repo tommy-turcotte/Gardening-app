@@ -16,3 +16,20 @@ View installed packages using `npm list` (no args shows local packages (e.g., `e
 ### Recommended tools (developer)
 1. Postman: much better way to hit endpoints over using a traditional browser 
 2. DB Browser for SQLite: track entire database state in real time 
+
+## Front-end details
+
+### Prerequisites
+
+`Node.js` version 12.2.0 or greater
+
+### Installing packages
+
+1. `npm install sass`
+2. `npm install bulma`
+4. `npm install vue-router@4`
+
+### How to run
+1. `cd frontend`
+2. `npm run dev`
+
