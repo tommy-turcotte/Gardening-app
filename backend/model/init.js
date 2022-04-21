@@ -12,6 +12,7 @@ const crypto = require('crypto');
 const users = require('./users.js'); 
 const auth = require('./auth.js'); 
 const locations = require('./locations.js'); 
+const watchers = require('./watchlist.js'); 
 
 // Connect to the database 
 const db = new sqlite3.Database('./data/database.db', (error) => {
@@ -292,14 +293,46 @@ function fillDB() {
         }
     }); 
 
-    // add location 
+    // add locations from JSON file 
     let locations_ = JSON.parse(fs.readFileSync('./data/location_recs.json', 'utf8'));
     for (i = 0; i < 2200; i++) {
         locations_[i]['longitude'] = getRandomCoordinate(180);
         locations_[i]['latitude'] = getRandomCoordinate(90);
     }
-
     locations.insertLocations(locations_); 
+
+    // add two new locations to user1's watchlist 
+    let location1 = {
+        "longitude": 21.11111,
+        "latitude": -12.34324,
+        "k_lvl": 33,
+        "n_lvl": 89,
+        "p_lvl": 24,
+        "ph": 6.9,
+        "temperature": 25.2,
+        "humidity": 62.4,
+        "rainfall": 170.4,
+        "recommended_crop": "coffee",
+        "name": null
+    };
+    locations.insertLocation(location1); 
+    watchers.insertWatcher({'username': username1, 'longitude': location1.longitude, 'latitude': location1.latitude});
+
+    let location2 = {
+        "longitude": 43.3443,
+        "latitude": -76.553232,
+        "k_lvl": 45,
+        "n_lvl": 73,
+        "p_lvl": 32,
+        "ph": 7.3,
+        "temperature": 43,
+        "humidity": 68.9,
+        "rainfall": 140.2,
+        "recommended_crop": "coffee",
+        "name": null
+    };
+    locations.insertLocation(location2);
+    watchers.insertWatcher({'username': username1, 'longitude': location2.longitude, 'latitude': location2.latitude});
 }
 
 

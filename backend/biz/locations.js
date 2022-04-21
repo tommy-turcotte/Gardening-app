@@ -124,3 +124,4 @@ module.exports.getAllLocations = getAllLocations;
 module.exports.buildCropRecModel = buildCropRecModel; 
 module.exports.calculateRecommendedCrop = calculateRecommendedCrop; 
 module.exports.getField = getField; 
+module.exports.fields = fields; 

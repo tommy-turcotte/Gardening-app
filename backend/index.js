@@ -16,6 +16,7 @@ const authBiz = require('./biz/auth.js');
 const initBiz = require('./biz/init.js'); 
 const userBiz = require('./biz/users.js'); 
 const locationBiz = require('./biz/locations.js'); 
+const watchlistBiz = require('./biz/watchlist.js'); 
 
 // track state of db to reject certain operations 
 // CHANGE THESE VALUES IF SERVER IS STARTED WITH AN EMPTY OR CLEARED DATABASE
@@ -55,7 +56,7 @@ app.get('/initializeDB', function(request, response) {
 
 
 app.get('/fillDB', function(request, response) {
-    // Fill all the tables in the database with user, auth, and location data. 
+    // Fill all the tables in the database with user, auth, location, and watch list data. 
     initBiz.fillDatabase(dbInitialized, dbFilled, function(statusCode, respBody) {
         if (statusCode == 200) {
             dbFilled = true; 
@@ -71,6 +72,8 @@ app.get('/clearDB', function(request, response) {
     initBiz.clearDatabase(isLoggedIn, dbInitialized, function(statusCode, respBody) {
         if (statusCode == 200) {
             dbFilled = false; 
+            isLoggedIn = false; 
+            userLoggedIn = null; 
         }
 
         response.status(statusCode).send(respBody); 
@@ -84,6 +87,8 @@ app.get('/emptyDB', function(request, response) {
         if (statusCode == 200) {
             dbInitialized = false; 
             dbFilled = false; 
+            isLoggedIn = false; 
+            userLoggedIn = null; 
         }
 
         response.status(statusCode).send(respBody); 
@@ -204,6 +209,41 @@ app.get('/locationField', function(request, response) {
             response.status(statusCode).send(respBody);
         }
     ); 
+}); 
+
+
+// _________________________________________________ Watchlist ___________________________________________________
+app.post('/location', function(request, response) {
+    // Add a new location to the database. 
+    // This is a watchlist endpoint since users add new locations from the watchlist page client-side. 
+    // Users have the choice to add this new location to their watchlist or not. 
+    watchlistBiz.addLocation(isLoggedIn, userLoggedIn, cropRecClassifier, request.body, function(statusCode, respBody) {
+        response.status(statusCode).send(respBody); 
+    }); 
+}); 
+
+
+app.post('/watchlist', function(request, response) {
+    // Add an existing location to a user's watchlist. 
+    watchlistBiz.addWatcher(isLoggedIn, userLoggedIn, dbFilled, request.body, function(statusCode, respBody) {
+        response.status(statusCode).send(respBody); 
+    }); 
+}); 
+
+
+app.get('/watchlist', function(request, response) {
+    // Retrieve all watched locations for a particular user. 
+    watchlistBiz.fetchWatchedLocations(isLoggedIn, userLoggedIn, dbFilled, function(statusCode, respBody) {
+        response.status(statusCode).send(respBody); 
+    }); 
+}); 
+
+
+app.get('/watchlistColStats', function(request, response) {
+    // Calculate aggregate data for a certain location attribute in a user's watchlist.  
+    watchlistBiz.fetchAttrData(isLoggedIn, userLoggedIn, dbFilled, request.query.attr, function(statusCode, respBody) {
+        response.status(statusCode).send(respBody); 
+    }); 
 }); 
 
 

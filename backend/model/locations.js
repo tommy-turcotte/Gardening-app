@@ -18,10 +18,28 @@ function insertLocations(locations) {
             (error) => {
                 if (error) {
                     console.error('Error inserting a Location into the database (insertLocations): ', error);  
+                    return -1; 
                 } 
             }
         ); 
     }
+}
+
+
+function insertLocation(location) {
+    // Insert a single location 
+    data.db.run(
+        `INSERT INTO Locations(longitude, latitude, k_lvl, n_lvl, p_lvl, ph, temperature, humidity, rainfall, 
+            recommended_crop, name) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+        [location.longitude, location.latitude, location.k_lvl, location.n_lvl, location.p_lvl, location.ph, 
+            location.temperature, location.humidity, location.rainfall, location.recommended_crop, location.name],  
+        (error) => {
+            if (error) {
+                console.error('Error inserting a Location into the database (insertLocation): ', error); 
+                return -1; 
+            } 
+        }
+    ); 
 }
 
 
@@ -80,6 +98,7 @@ function setField(longitude, latitude, field, value) {
 
 
 module.exports.insertLocations = insertLocations; 
+module.exports.insertLocation = insertLocation; 
 module.exports.getAllLocations = getAllLocations; 
 module.exports.getLocation = getLocation; 
 module.exports.getField = getField; 
