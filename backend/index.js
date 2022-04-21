@@ -25,6 +25,13 @@ var dbFilled = true;
 // track auth info 
 var isLoggedIn = false; 
 var userLoggedIn = null; 
+var hashArgs = {
+    'iterations': 20,
+    'hash_length': 64,
+    'algorithm': 'sha512',
+    'salt': null
+}; 
+var saltLength = 128; 
 
 // ML models 
 var cropRecClassifier = null; 
@@ -113,6 +120,39 @@ app.post('/login', function(request, response) {
             response.status(statusCode).send(respBody); 
         }   
     ); 
+}); 
+
+
+app.get('/hashArgs', function(request, response) {
+    // Sends password hashing arguments currently in use. 
+    authBiz.sendAuthArgs(hashArgs, saltLength, function(statusCode, respBody) {
+        response.status(statusCode).send(respBody); 
+        hashArgs.salt = null; 
+    }); 
+}); 
+
+
+app.post('/register', function(request, response) {
+    // Creates a new user. Enters new info in Users and Auth tables. Logs in as this user.  
+    authBiz.register(request.body, function(statusCode, respBody, authUsername) {
+        if (authUsername != null) {
+            isLoggedIn = true; 
+            userLoggedIn = authUsername; 
+        }
+
+        response.status(statusCode).send(respBody); 
+    }); 
+}); 
+
+
+app.post('/logout', function(request, response) {
+    // Logs out the currently authenticated user. 
+    authBiz.logout(isLoggedIn, function(statusCode, respBody) {
+        isLoggedIn = false; 
+        userLoggedIn = null;
+
+        response.status(statusCode).send(respBody); 
+    }); 
 }); 
 
 

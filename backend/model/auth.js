@@ -15,6 +15,7 @@ function insertSingleAuth(username, hashedPw, salt, iterations, hashLength, algo
         (error) => {
             if (error) {
                 console.error('Error inserting auth info into the database (insertSingleAuth): ', error); 
+                return -1; 
             } 
         }
     ); 

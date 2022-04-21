@@ -4,6 +4,8 @@ Business layer logic for auth-related endpoints.
 Author: Liam Turcotte
 */
 
+const crypto = require('crypto');
+
 const dbUsers = require('../model/users.js');
 const dbAuth = require('../model/auth.js'); 
 
@@ -50,6 +52,58 @@ function login(isLoggedIn, userLoggedIn, username, hashedPw, sendResponse) {
 }
 
 
+function generateSalt(saltLength) {
+    // generate salt 
+    return crypto.randomBytes(saltLength).toString('base64');
+}
+
+
+function sendAuthArgs(hashArgs, saltLength, sendResponse) {
+    // send auth arguments (iterations, hash length, algorithm, salt)
+    hashArgs['salt'] = generateSalt(saltLength); 
+    sendResponse(200, hashArgs); 
+}
+
+
+function register(fields, sendResponse) {
+    // first check if user already exists 
+    dbUsers.getUser(fields.username, function(user) {
+        if (user != null) {
+            sendResponse(403, "Username already in use.", null); 
+            return; 
+        } 
+
+        // put username, email, name in users table 
+        if (dbUsers.insertUser(fields.username, fields.email, fields.name) == -1) {
+            sendResponse(500, "Issue during the registration process.", null); 
+            return; 
+        } 
+
+        // put username, hashed pw, hash args, salt in Auth table
+        if (dbAuth.insertSingleAuth(fields.username, fields.hashed_pw, fields.salt, fields.iterations, 
+                fields.hash_length, fields.algorithm) == -1) {
+            sendResponse(500, "Issue during the registration process.", null); 
+            return;
+        }
+        
+        sendResponse(201, "User successfully created", fields.username); 
+    });
+}
+
+
+function logout(isLoggedIn, sendResponse) {
+    // handles response for logout 
+    if (!isLoggedIn) {
+        sendResponse(403, "No user currently logged in."); 
+    } else {
+        sendResponse(200, "Successfully logged out."); 
+    }
+}
+
+
 module.exports.sendAuthenticatedUser = sendAuthenticatedUser; 
 module.exports.sendAuthInfo = sendAuthInfo; 
 module.exports.login = login; 
+module.exports.sendAuthArgs = sendAuthArgs; 
+module.exports.register = register; 
+module.exports.logout = logout; 

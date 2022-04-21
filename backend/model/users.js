@@ -12,6 +12,7 @@ function insertUser(username, email, name) {
     data.db.run('INSERT INTO Users(username, email, name) VALUES(?, ?, ?)', [username, email, name], (error) => {
         if (error) {
             console.error('Error inserting a User into the database (insertUser): ', error); 
+            return -1; 
         } 
     }); 
 }
