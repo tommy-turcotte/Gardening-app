@@ -1,10 +1,5 @@
-<script setup>
-import Navbar from './components/NavBar.vue'
-</script>
-
 <template>
    <body>
-       <Navbar />
     <router-view />
     <footer class="footer">
         <div class="container has-text-centered">
@@ -16,7 +11,7 @@ import Navbar from './components/NavBar.vue'
 </template>
 
 <style lang="scss">
-  @import "../node_modules/bulma/bulma.sass";
+  @import "~bulma";
   .footer {
     background-color: #363636!important;
   }
@@ -27,4 +22,3 @@ import Navbar from './components/NavBar.vue'
       color: black;
   }
 </style>
-

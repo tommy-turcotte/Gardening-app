@@ -100,7 +100,7 @@ app.get('/emptyDB', function(request, response) {
 app.get('/authenticatedUser', function(request, response) {
     // Fetch data of the currently authenticated user. 
     authBiz.sendAuthenticatedUser(isLoggedIn, userLoggedIn, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
     }); 
 }); 
 
@@ -108,12 +108,12 @@ app.get('/authenticatedUser', function(request, response) {
 app.get('/authInfo', function(request, response) {
     // Fetch auth info (salt, iterations, hash length, algorithm) for a user 
     authBiz.sendAuthInfo(request.query.username, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
     }); 
 }); 
 
 
-app.post('/login', function(request, response) {
+/*app.post('/login', function(request, response) {
     // Attempt to login using auth info passed in from the request.  
     authBiz.login(isLoggedIn, userLoggedIn, request.body.username, request.body.hashedPw, 
         function(statusCode, respBody, authUsername) {
@@ -122,7 +122,22 @@ app.post('/login', function(request, response) {
                 userLoggedIn = authUsername; 
             }
 
-            response.status(statusCode).send(respBody); 
+            response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+        }   
+    ); 
+});*/
+
+
+app.get('/login', function(request, response) {
+    // Attempt to login using auth info passed in from the request.  
+    authBiz.login(isLoggedIn, userLoggedIn, request.query.username, request.query.hashedPw, 
+        function(statusCode, respBody, authUsername) {
+            if (authUsername != null) {
+                isLoggedIn = true; 
+                userLoggedIn = authUsername; 
+            }
+
+            response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
         }   
     ); 
 }); 
@@ -137,7 +152,7 @@ app.get('/hashArgs', function(request, response) {
 }); 
 
 
-app.post('/register', function(request, response) {
+/*app.post('/register', function(request, response) {
     // Creates a new user. Enters new info in Users and Auth tables. Logs in as this user.  
     authBiz.register(request.body, function(statusCode, respBody, authUsername) {
         if (authUsername != null) {
@@ -147,10 +162,23 @@ app.post('/register', function(request, response) {
 
         response.status(statusCode).send(respBody); 
     }); 
+}); */
+
+
+app.get('/register', function(request, response) {
+    // Creates a new user. Enters new info in Users and Auth tables. Logs in as this user.  
+    authBiz.register(request.query, function(statusCode, respBody, authUsername) {
+        if (authUsername != null) {
+            isLoggedIn = true; 
+            userLoggedIn = authUsername; 
+        }
+
+        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+    }); 
 }); 
 
 
-app.post('/logout', function(request, response) {
+/*app.post('/logout', function(request, response) {
     // Logs out the currently authenticated user. 
     authBiz.logout(isLoggedIn, function(statusCode, respBody) {
         isLoggedIn = false; 
@@ -158,7 +186,18 @@ app.post('/logout', function(request, response) {
 
         response.status(statusCode).send(respBody); 
     }); 
-}); 
+}); */
+
+
+app.get('/logout', function(request, response) {
+    // Logs out the currently authenticated user. 
+    authBiz.logout(isLoggedIn, function(statusCode, respBody) {
+        isLoggedIn = false; 
+        userLoggedIn = null;
+
+        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+    }); 
+});
 
 
 // _________________________________________________ Users ___________________________________________________

@@ -25,11 +25,11 @@ View installed packages using `npm list` (no args shows local packages (e.g., `e
 
 ### Installing packages
 
-1. `npm install sass`
+1. `npm install -g @vue/cli`
 2. `npm install bulma`
-4. `npm install vue-router@4`
+3. `npm install axios`
 
 ### How to run
 1. `cd frontend`
-2. `npm run dev`
+2. `npm run serve`
 
