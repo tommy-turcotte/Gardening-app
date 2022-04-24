@@ -42,6 +42,11 @@ var cropRecClassifier = null;
 // TODO: strongly consider splitting up endpoints into different files 
 
 
+function sendResponse(response, statusCode, respBody) {
+    response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+}
+
+
 // _________________________________________________ Initialization ___________________________________________________
 app.get('/initializeDB', function(request, response) {
     // Construct all the tables in the database. 
@@ -50,7 +55,7 @@ app.get('/initializeDB', function(request, response) {
             dbInitialized = true; 
         }
 
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
@@ -62,7 +67,7 @@ app.get('/fillDB', function(request, response) {
             dbFilled = true; 
         }
 
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody);  
     }); 
 }); 
 
@@ -76,7 +81,7 @@ app.get('/clearDB', function(request, response) {
             userLoggedIn = null; 
         }
 
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody);  
     });
 });
 
@@ -91,7 +96,7 @@ app.get('/emptyDB', function(request, response) {
             userLoggedIn = null; 
         }
 
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
@@ -100,7 +105,7 @@ app.get('/emptyDB', function(request, response) {
 app.get('/authenticatedUser', function(request, response) {
     // Fetch data of the currently authenticated user. 
     authBiz.sendAuthenticatedUser(isLoggedIn, userLoggedIn, function(statusCode, respBody) {
-        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody);  
     }); 
 }); 
 
@@ -108,26 +113,12 @@ app.get('/authenticatedUser', function(request, response) {
 app.get('/authInfo', function(request, response) {
     // Fetch auth info (salt, iterations, hash length, algorithm) for a user 
     authBiz.sendAuthInfo(request.query.username, function(statusCode, respBody) {
-        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
 
-/*app.post('/login', function(request, response) {
-    // Attempt to login using auth info passed in from the request.  
-    authBiz.login(isLoggedIn, userLoggedIn, request.body.username, request.body.hashedPw, 
-        function(statusCode, respBody, authUsername) {
-            if (authUsername != null) {
-                isLoggedIn = true; 
-                userLoggedIn = authUsername; 
-            }
-
-            response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
-        }   
-    ); 
-});*/
-
-
+// NOTE: formerly a POST request; changed to GET because of CORS policy issues 
 app.get('/login', function(request, response) {
     // Attempt to login using auth info passed in from the request.  
     authBiz.login(isLoggedIn, userLoggedIn, request.query.username, request.query.hashedPw, 
@@ -137,7 +128,7 @@ app.get('/login', function(request, response) {
                 userLoggedIn = authUsername; 
             }
 
-            response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+            sendResponse(response, statusCode, respBody); 
         }   
     ); 
 }); 
@@ -146,56 +137,35 @@ app.get('/login', function(request, response) {
 app.get('/hashArgs', function(request, response) {
     // Sends password hashing arguments currently in use. 
     authBiz.sendAuthArgs(hashArgs, saltLength, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody);  
         hashArgs.salt = null; 
     }); 
 }); 
 
 
-/*app.post('/register', function(request, response) {
-    // Creates a new user. Enters new info in Users and Auth tables. Logs in as this user.  
-    authBiz.register(request.body, function(statusCode, respBody, authUsername) {
-        if (authUsername != null) {
-            isLoggedIn = true; 
-            userLoggedIn = authUsername; 
-        }
-
-        response.status(statusCode).send(respBody); 
-    }); 
-}); */
-
-
+// NOTE: formerly a POST request; changed to GET because of CORS policy issues 
 app.get('/register', function(request, response) {
     // Creates a new user. Enters new info in Users and Auth tables. Logs in as this user.  
-    authBiz.register(request.query, function(statusCode, respBody, authUsername) {
+    authBiz.register(request.query, hashArgs, saltLength, function(statusCode, respBody, authUsername) {
+        hashArgs.salt = null; 
         if (authUsername != null) {
             isLoggedIn = true; 
             userLoggedIn = authUsername; 
         }
 
-        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
 
-/*app.post('/logout', function(request, response) {
-    // Logs out the currently authenticated user. 
-    authBiz.logout(isLoggedIn, function(statusCode, respBody) {
-        isLoggedIn = false; 
-        userLoggedIn = null;
-
-        response.status(statusCode).send(respBody); 
-    }); 
-}); */
-
-
+// NOTE: formerly a POST request; changed to GET because of CORS policy issues 
 app.get('/logout', function(request, response) {
     // Logs out the currently authenticated user. 
     authBiz.logout(isLoggedIn, function(statusCode, respBody) {
         isLoggedIn = false; 
         userLoggedIn = null;
 
-        response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 });
 
@@ -204,7 +174,7 @@ app.get('/logout', function(request, response) {
 app.get('/users', function(request, response) {
     // Fetch all users in the database. 
     userBiz.getAllUsers(isLoggedIn, dbFilled, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
@@ -213,7 +183,7 @@ app.get('/users', function(request, response) {
 app.get('/locations', function(request, response) {
     // Fetch all locations in the database. 
     locationBiz.getAllLocations(isLoggedIn, dbFilled, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 });
 
@@ -225,7 +195,7 @@ app.get('/buildRecModel', function(request, response) {
             cropRecClassifier = classifier_; 
         }
 
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody);  
     }); 
 }); 
 
@@ -235,7 +205,7 @@ app.get('/cropRecommendation', function(request, response) {
     // Performs no data modifications. 
     locationBiz.calculateRecommendedCrop(dbFilled, cropRecClassifier, request.query.longitude, request.query.latitude, 
         function(statusCode, respBody) {
-            response.status(statusCode).send(respBody); 
+            sendResponse(response, statusCode, respBody); 
         }
     ); 
 }); 
@@ -245,27 +215,29 @@ app.get('/locationField', function(request, response) {
     // Returns the value for a certain attribute (field) for a particular location. 
     locationBiz.getField(dbFilled, request.query.longitude, request.query.latitude, request.query.field, 
         function(statusCode, respBody) {
-            response.status(statusCode).send(respBody);
+            sendResponse(response, statusCode, respBody); 
         }
     ); 
 }); 
 
 
 // _________________________________________________ Watchlist ___________________________________________________
-app.post('/location', function(request, response) {
+// NOTE: formerly a POST request; changed to GET because of CORS policy issues 
+app.get('/addlocation', function(request, response) {
     // Add a new location to the database. 
     // This is a watchlist endpoint since users add new locations from the watchlist page client-side. 
     // Users have the choice to add this new location to their watchlist or not. 
-    watchlistBiz.addLocation(isLoggedIn, userLoggedIn, cropRecClassifier, request.body, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+    watchlistBiz.addLocation(isLoggedIn, userLoggedIn, cropRecClassifier, request.query, function(statusCode, respBody){
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
 
-app.post('/watchlist', function(request, response) {
+// NOTE: formerly a POST request; changed to GET because of CORS policy issues 
+app.get('/addToWatchlist', function(request, response) {
     // Add an existing location to a user's watchlist. 
-    watchlistBiz.addWatcher(isLoggedIn, userLoggedIn, dbFilled, request.body, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+    watchlistBiz.addWatcher(isLoggedIn, userLoggedIn, dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
@@ -273,7 +245,7 @@ app.post('/watchlist', function(request, response) {
 app.get('/watchlist', function(request, response) {
     // Retrieve all watched locations for a particular user. 
     watchlistBiz.fetchWatchedLocations(isLoggedIn, userLoggedIn, dbFilled, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
@@ -281,7 +253,7 @@ app.get('/watchlist', function(request, response) {
 app.get('/watchlistColStats', function(request, response) {
     // Calculate aggregate data for a certain location attribute in a user's watchlist.  
     watchlistBiz.fetchAttrData(isLoggedIn, userLoggedIn, dbFilled, request.query.attr, function(statusCode, respBody) {
-        response.status(statusCode).send(respBody); 
+        sendResponse(response, statusCode, respBody); 
     }); 
 }); 
 
