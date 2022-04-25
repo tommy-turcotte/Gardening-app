@@ -27,6 +27,7 @@
 <script>
 import axios from 'axios'
 import NavBar from '../components/NavBar.vue'
+import md5 from 'md5'
 
 export default {
   name: 'LoginView',
@@ -44,7 +45,7 @@ export default {
                     console.log("it broke");
                 }
                 else {
-                    var hashedPw = "f9237ac8edea8290896099012be6e62fa23610e2ee5f1faa0260e7aff42a4f7ee83b3812ce36cc95c8784eed6273f22bafaec4ece5c4f017355aafe92f8dd8a5"
+                    var hashedPw = md5(pw)
                     axios.get(`http://127.0.0.1:4321/login?username=${un}&hashedPw=${hashedPw}`)
                         .then(response => {
                             console.log(`Login body: ${response.data}`);

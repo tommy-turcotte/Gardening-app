@@ -27,8 +27,15 @@
         <a class="navbar-item is-size-4">
          Search
         </a>
-
-        <router-link v-if="isloggedin === true" class="navbar-item is-size-4" @click="logOut()" to="/">Log out</router-link>
+        <div v-if="isloggedin === true" class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link is-size-4">
+          Profile
+          </a>
+          <div class="navbar-dropdown is-dark">
+            <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Account">Account</router-link>
+            <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Logout">Log out</router-link>
+          </div>          
+        </div>
         <router-link v-if="isloggedin === false" class="navbar-item is-size-4" to="/login">Log In</router-link>
         <router-link v-if="isloggedin === false" class="navbar-item is-size-4" to="/Register">Register</router-link>
       </div>
@@ -58,18 +65,6 @@ export default{
          })
         .catch(error=> console.log(error));
       },
-  methods: {
-    logOut(){
-      location.reload()
-      axios.get("http://127.0.0.1:4321/logout")
-        .then(response=> {
-          if (response.status == 200){
-            console.log("successfully logged out")
-          }
-        })
-        .catch(error=> console.log(error));
-      }
-    }
 }
 </script>
 

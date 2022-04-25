@@ -28,6 +28,7 @@ View installed packages using `npm list` (no args shows local packages (e.g., `e
 1. `npm install -g @vue/cli`
 2. `npm install bulma`
 3. `npm install axios`
+4. `npm install md5`
 
 ### How to run
 1. `cd frontend`
