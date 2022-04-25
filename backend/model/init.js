@@ -7,6 +7,7 @@ Author: Liam Turcotte
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs'); 
 const crypto = require('crypto');
+const md5 = require('md5');
 
 // necessary to have access to Users, Auth, and Locations insertion functions for fill 
 const users = require('./users.js'); 
@@ -273,8 +274,8 @@ function fillDB() {
     let algo = 'sha512'; 
     let salt1 = crypto.randomBytes(128).toString('base64');
     let salt2 = crypto.randomBytes(128).toString('base64');
-    let pw1 = 'user1pw';
-    let pw2 = 'user2pw'; 
+    let pw1 = md5('user1pw');
+    let pw2 = md5('user2pw'); 
 
     // generate hashed passwords, insert into auth table 
     crypto.pbkdf2(pw1, salt1, iterations, hashLength, algo, (error, hashedPw) => {
@@ -294,6 +295,7 @@ function fillDB() {
     }); 
 
     // add locations from JSON file 
+    // please view the README.md file in the root directory for more information 
     let locations_ = JSON.parse(fs.readFileSync('./data/location_recs.json', 'utf8'));
     for (i = 0; i < 2200; i++) {
         locations_[i]['longitude'] = getRandomCoordinate(180);

@@ -38,11 +38,19 @@ var saltLength = 128;
 var cropRecClassifier = null; 
 
 
-// TODO: May need to implement access control mechanisms 
-// TODO: strongly consider splitting up endpoints into different files 
+// initialize crop recommendation model once the backend session begins 
+locationBiz.buildCropRecModel(dbFilled, function(statusCode, respBody, classifier_) {
+    if (classifier_ != null && statusCode == 200) {
+        cropRecClassifier = classifier_; 
+    } else {
+        console.error(respBody); 
+    }
+}); 
 
 
 function sendResponse(response, statusCode, respBody) {
+    // Handles sending a response to the client. 
+    // The header specified lets the server accept requests from clients running on a different host (e.g., port 3000)
     response.header("Access-Control-Allow-Origin", "*").status(statusCode).send(respBody); 
 }
 
