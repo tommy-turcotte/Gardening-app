@@ -9,11 +9,13 @@ const fs = require('fs');
 const crypto = require('crypto');
 const md5 = require('md5');
 
-// necessary to have access to Users, Auth, and Locations insertion functions for fill 
+// necessary to have access to db modification functions for fill 
 const users = require('./users.js'); 
 const auth = require('./auth.js'); 
 const locations = require('./locations.js'); 
 const watchers = require('./watchlist.js'); 
+const crops = require('./crops.js'); 
+const yields = require('./yields.js'); 
 
 // Connect to the database 
 const db = new sqlite3.Database('./data/database.db', (error) => {
@@ -261,7 +263,7 @@ function getRandomCoordinate(range) {
 
 
 function fillDB() {
-    // fills the database with two users (including auth info) and locations in location_recs.json 
+    // fills the database with two users (including auth info), locations in location_recs.json, and other data 
     // add users 
     let username1 = 'user1'; 
     let username2 = 'user2'; 
@@ -335,6 +337,85 @@ function fillDB() {
     };
     locations.insertLocation(location2);
     watchers.insertWatcher({'username': username1, 'longitude': location2.longitude, 'latitude': location2.latitude});
+
+    // fill crops table 
+    let cropNames = [
+        "rice", 
+        "maize", 
+        "chickpea",
+        "kidneybeans",
+        "pigeonpeas", 
+        "mothbeans",
+        "mungbean",
+        "blackgram",
+        "lentil",
+        "pomegranate",
+        "banana",
+        "mango",
+        "grapes",
+        "watermelon",
+        "muskmelon",
+        "apple",
+        "orange",
+        "papaya",
+        "coconut",
+        "cotton",
+        "jute",
+        "coffee"
+    ]; 
+
+    // note: values are in kg/hectare 
+    let cropFields = {
+        'threshold_1': 1.5, 
+        'threshold_2': 2.5,
+        'threshold_3': 3.5,
+        'threshold_4': 4.5,
+        'name': null 
+    }; 
+
+    for (i = 0; i < cropNames.length; i++) {
+        cropFields['name'] = cropNames[i];
+        if (crops.insertCrop(cropFields) == -1) {
+            console.error(`Issue inserting crop ${cropFields.name}. Recommended to clear the db.`); 
+        }
+    }
+
+    // add crop/yield data for user1's watched locations 
+    let loc1Crop1 = {
+        "longitude": location1.longitude,
+        "latitude": location1.latitude,
+        "crop": "coffee",
+        "yield": 3.67,
+        "label": yields.calculateYieldLabel(cropFields, 3.67)
+    }; 
+    yields.insertYield(loc1Crop1); 
+
+    let loc1Crop2 = {
+        "longitude": location1.longitude,
+        "latitude": location1.latitude,
+        "crop": "watermelon",
+        "yield": 0.78,
+        "label": yields.calculateYieldLabel(cropFields, 0.78)
+    }; 
+    yields.insertYield(loc1Crop2); 
+
+    let loc2Crop1 = {
+        "longitude": location2.longitude,
+        "latitude": location2.latitude,
+        "crop": "banana",
+        "yield": 2.89,
+        "label": yields.calculateYieldLabel(cropFields, 2.89)
+    }; 
+    yields.insertYield(loc2Crop1); 
+
+    let loc2Crop2 = {
+        "longitude": location2.longitude,
+        "latitude": location2.latitude,
+        "crop": "lentil",
+        "yield": 6.2,
+        "label": yields.calculateYieldLabel(cropFields, 6.2)
+    }; 
+    yields.insertYield(loc2Crop2); 
 }
 
 

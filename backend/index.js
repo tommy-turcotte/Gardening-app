@@ -17,6 +17,7 @@ const initBiz = require('./biz/init.js');
 const userBiz = require('./biz/users.js'); 
 const locationBiz = require('./biz/locations.js'); 
 const watchlistBiz = require('./biz/watchlist.js'); 
+const yieldsBiz = require('./biz/yields.js'); 
 
 // track state of db to reject certain operations 
 // CHANGE THESE VALUES IF SERVER IS STARTED WITH AN EMPTY OR CLEARED DATABASE
@@ -264,6 +265,32 @@ app.get('/watchlistColStats', function(request, response) {
         sendResponse(response, statusCode, respBody); 
     }); 
 }); 
+
+
+// _________________________________________________ Crops & Yields ___________________________________________________
+app.get('/locationYields', function(request, response) {
+    // Returns all crop/yield combinations for a particular location. 
+    yieldsBiz.fetchLocationYields(isLoggedIn, dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
+
+app.get('/locationCropYield', function(request, response) {
+    // Return yield value for a certain crop at a particular location. 
+    yieldsBiz.fetchLocationCropYield(isLoggedIn, dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
+
+app.get('/addCropYield', function(request, response) {
+    // Add a crop + yield entry for a particular location. 
+    yieldsBiz.addCropYield(isLoggedIn, dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
 
 
 // set up the server to listen on port 4321 
