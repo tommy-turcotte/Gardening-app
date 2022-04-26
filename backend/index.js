@@ -18,6 +18,7 @@ const userBiz = require('./biz/users.js');
 const locationBiz = require('./biz/locations.js'); 
 const watchlistBiz = require('./biz/watchlist.js'); 
 const yieldsBiz = require('./biz/yields.js'); 
+const forumBiz = require('./biz/forum.js'); 
 
 // track state of db to reject certain operations 
 // CHANGE THESE VALUES IF SERVER IS STARTED WITH AN EMPTY OR CLEARED DATABASE
@@ -299,6 +300,55 @@ app.get('/searchResult', function(request, response) {
         sendResponse(response, statusCode, respBody);
     });
 });
+
+
+// _________________________________________________ Forum ___________________________________________________________
+app.get('/createThread', function(request, response) {
+    // Adds a new thread to the forum. 
+    forumBiz.insertThread(isLoggedIn, userLoggedIn, dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
+
+app.get('/thread', function(request, response) {
+    // Returns a single thread. 
+    forumBiz.getThread(dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
+
+app.get('/threads', function(request, response) {
+    // Returns all threads. 
+    forumBiz.getAllThreads(dbFilled, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
+
+app.get('/addComment', function(request, response) {
+    // Adds a single comment to an existing thread.
+    forumBiz.addComment(isLoggedIn, userLoggedIn, dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
+
+app.get('/updateComment', function(request, response) {
+    // Updates the text of a comment. 
+    forumBiz.updateComment(isLoggedIn, userLoggedIn, dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
+
+
+app.get('/threadComments', function(request, response) {
+    // Returns all comments for an existing thread. 
+    forumBiz.getAllThreadComments(dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+}); 
 
 
 

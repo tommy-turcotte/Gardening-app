@@ -16,6 +16,7 @@ const locations = require('./locations.js');
 const watchers = require('./watchlist.js'); 
 const crops = require('./crops.js'); 
 const yields = require('./yields.js'); 
+const forum = require('./forum.js'); 
 
 // Connect to the database 
 const db = new sqlite3.Database('./data/database.db', (error) => {
@@ -416,6 +417,62 @@ function fillDB() {
         "label": yields.calculateYieldLabel(cropFields, 6.2)
     }; 
     yields.insertYield(loc2Crop2); 
+
+    // insert threads created by user1 and user2 with comments from user1 and user2 
+    let thread1Timings = (new Date()).toISOString(); 
+    let thread1Fields = {
+        'id': '768066ba-1dd3-4103-8945-5b2f4465f960',
+        'username': username1,
+        'title': 'Good soil type to grow rice?',
+        'creation_dt': thread1Timings,
+        'last_updated_dt': thread1Timings, 
+        'description': 'Are potassium levels significant?'
+    }; 
+    forum.insertThread(thread1Fields);
+
+    let thread1Comment1 = {
+        'id': '329066ba-1dd3-4103-8945-5b2f4465f960',
+        'username': username2,
+        't_id': '768066ba-1dd3-4103-8945-5b2f4465f960',
+        't_creator': username1, 
+        'text': 'Nitrogen is more important.',
+        'c_dt': thread1Timings,
+        'last_updated_dt': thread1Timings, 
+    }; 
+    forum.addComment(thread1Comment1); 
+
+    let thread1Comment2 = {
+        'id': '001066ba-1dd3-4103-8945-5b2f4465f960',
+        'username': username1,
+        't_id': '768066ba-1dd3-4103-8945-5b2f4465f960',
+        't_creator': username1, 
+        'text': 'Thanks',
+        'c_dt': thread1Timings,
+        'last_updated_dt': thread1Timings, 
+    }; 
+    forum.addComment(thread1Comment2); 
+
+    let thread2Timings = (new Date()).toISOString(); 
+    let thread2Fields = {
+        'id': 'b7af55f5-945e-41d0-8fe1-ebe3b8c54ee5',
+        'username': username2,
+        'title': 'My yield values this year',
+        'creation_dt': thread2Timings,
+        'last_updated_dt': thread2Timings, 
+        'description': 'rice: 2.3 kg/hectare, lentil: 0.7 kg/hectare, banana: 4.8 kg/hectare'
+    }; 
+    forum.insertThread(thread2Fields);
+
+    let thread2Comment = {
+        'id': 'c1af55f5-945e-41d0-8fe1-ebe3b8c54ee5',
+        'username': username1,
+        't_id': 'b7af55f5-945e-41d0-8fe1-ebe3b8c54ee5',
+        't_creator': username2, 
+        'text': 'Congrats!',
+        'c_dt': thread2Timings,
+        'last_updated_dt': thread2Timings, 
+    }; 
+    forum.addComment(thread2Comment); 
 }
 
 
