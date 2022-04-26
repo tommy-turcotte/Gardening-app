@@ -1,7 +1,7 @@
 /*
 Business layer logic for location-related endpoints. 
 
-Author: Liam Turcotte
+Authors: Liam Turcotte, Samuel Bazinet
 */
 
 const KNN = require('ml-knn'); 
@@ -39,6 +39,33 @@ function getAllLocations(isLoggedIn, dbFilled, sendResponse) {
                 sendResponse(200, locations); 
             }
         }); 
+    }
+}
+
+
+function getSearchLocations(dbFilled, attributes, sendResponse) {
+    if (!dbFilled) {
+        sendResponse(403, "No location data.");
+    } else {
+        let query = "";
+        let firstAttr = true;
+        for (const attr in attributes) {
+            if (attributes.hasOwnProperty(attr) && fields.has(attr)) {
+                if (!firstAttr) {
+                    query += "AND ";
+                } else {
+                    firstAttr = false;
+                }
+                query += `${attr} = ${attributes[attr]} `;
+            }
+        }
+        dbLocations.getSearchLocations(query, function(locations) {
+            if (locations.length == 0) {
+                sendResponse(403, "No location data."); 
+            } else {
+                sendResponse(200, locations); 
+            }
+        });
     }
 }
 
@@ -121,6 +148,7 @@ function getField(dbFilled, longitude, latitude, field, sendResponse) {
 
 
 module.exports.getAllLocations = getAllLocations; 
+module.exports.getSearchLocations = getSearchLocations;
 module.exports.buildCropRecModel = buildCropRecModel; 
 module.exports.calculateRecommendedCrop = calculateRecommendedCrop; 
 module.exports.getField = getField; 

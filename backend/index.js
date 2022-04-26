@@ -292,6 +292,15 @@ app.get('/addCropYield', function(request, response) {
 }); 
 
 
+// _________________________________________________ Search ___________________________________________________________
+app.get('/searchResult', function(request, response) {
+    // Return locations for the selected attributes
+    locationBiz.getSearchLocations(dbFilled, request.query, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody);
+    });
+});
+
+
 
 // set up the server to listen on port 4321 
 app.set('port', process.env.PORT || 4321);

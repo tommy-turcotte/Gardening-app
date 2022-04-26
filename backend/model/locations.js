@@ -1,7 +1,7 @@
 /*
 Data retrieval and manipulation for the Locations table. 
 
-Author: Liam Turcotte
+Authors: Liam Turcotte, Samuel Bazinet
 */
 
 const data = require('./init.js'); 
@@ -69,6 +69,20 @@ function getLocation(longitude, latitude, send) {
 }
 
 
+function getSearchLocations(query, send) {
+    // Retreive the locations matching the search query
+    data.db.all("SELECT * FROM Locations WHERE " + query,
+        (error, locations) => {
+            if (!error) {
+                send(locations);
+            } else {
+                console.error("Error querying the database (getSearchLocations: ", error);
+            }
+        }
+    );
+}
+
+
 function getField(longitude, latitude, field, send) {
     // retrieve the value for a certain attribute (field) for a particular location
     data.db.get(`SELECT ${field} FROM Locations WHERE longitude = ? AND latitude = ?`, [longitude, latitude], 
@@ -101,5 +115,6 @@ module.exports.insertLocations = insertLocations;
 module.exports.insertLocation = insertLocation; 
 module.exports.getAllLocations = getAllLocations; 
 module.exports.getLocation = getLocation; 
+module.exports.getSearchLocations = getSearchLocations;
 module.exports.getField = getField; 
 module.exports.setField = setField; 
