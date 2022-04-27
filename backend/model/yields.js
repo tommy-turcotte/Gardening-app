@@ -19,7 +19,7 @@ function calculateYieldLabel(thresholds, yield) {
             return 3; 
         case (yield >= thresholds.threshold_3 && yield < thresholds.threshold_4):
             return 4;
-        case (yield >= thresholds.threshold_5):
+        case (yield >= thresholds.threshold_4):
             return 5; 
         default:
             return -1; 

@@ -17,9 +17,7 @@
       <div class="navbar-end mr-auto">
 
         <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Watch-List">Watch List</router-link>
-        <a v-if="isloggedin === true" class="navbar-item is-size-4">
-         Crops and Yields
-        </a>
+        <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Cropyield">Crops And Yields</router-link>
         <a class="navbar-item is-size-4">
          Search
         </a>

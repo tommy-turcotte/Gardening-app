@@ -7,6 +7,7 @@ import Account from '../views/AccountView.vue'
 import Logout from '../views/LogoutView.vue'
 import WatchList from '../views/WatchlistView.vue'
 import Location from '../views/LocationView.vue'
+import Cropyield from '../views/CropyieldView.vue'
 
 const routes = [
   {
@@ -48,6 +49,11 @@ const routes = [
     path: '/Location',
     name: 'Location',
     component: Location
+  },
+  {
+    path: '/Cropyield',
+    name: 'Cropyield',
+    component: Cropyield
   }
 ]
 

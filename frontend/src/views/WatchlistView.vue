@@ -176,9 +176,11 @@ export default {
         var test = document.getElementById("dd")
         test.classList.add("is-active")
       })
-      $(window).click(function(){
+      $(document).click(function(){
         var test = document.getElementById("dd")
-        test.classList.remove("is-active")
+        if(test!=null){
+            test.classList.remove("is-active")
+        }
       })
       $( "#trig" ).click(function(e) {
         e.stopPropagation()
