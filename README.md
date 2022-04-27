@@ -8,6 +8,9 @@
 | Samuel Bazinet | [samuel-bazinet](https://github.com/samuel-bazinet) |
 | Guillaume Flores | [Will-exe](https://github.com/Will-exe) |
 
+## Independent Study 
+Our independent study is on `Node.js`'s built-in `crypto` module, located at `docs/Independent_Study_crypto.pdf`. The slides can be accessed [here](docs/Independent_Study_crypto.pdf). 
+
 ## Project and App Overview
 This website is a data-centric application whose purpose is to aid gardeners and farmers in managing their planted crops and making optimal horticulture decisions. Please see the `Pages and System Functions` section further down this page for more details on the site’s modules. 
 
