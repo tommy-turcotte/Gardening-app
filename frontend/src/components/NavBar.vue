@@ -16,17 +16,14 @@
 
       <div class="navbar-end mr-auto">
 
-        <a v-if="isloggedin === true" class="navbar-item is-size-4">
-         Watch List
-        </a>
+        <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Watch-List">Watch List</router-link>
         <a v-if="isloggedin === true" class="navbar-item is-size-4">
          Crops and Yields
         </a>
-
-        <router-link class="navbar-item is-size-4" to="/forum">Forum</router-link>
         <a class="navbar-item is-size-4">
          Search
         </a>
+        <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Location">Add Location</router-link>
         <div v-if="isloggedin === true" class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link is-size-4">
           Profile

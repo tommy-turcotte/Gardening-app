@@ -51,6 +51,8 @@ Ensure you are in the `frontend/` directory.
 2. `npm install bulma`
 3. `npm install axios`
 4. `npm install md5`
+5. `npm install jquery`
+6. `npm install d3`
 
 ### How to run
 First ensure that the backend server is running. 
