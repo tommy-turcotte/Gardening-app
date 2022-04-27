@@ -19,6 +19,7 @@ const locationBiz = require('./biz/locations.js');
 const watchlistBiz = require('./biz/watchlist.js'); 
 const yieldsBiz = require('./biz/yields.js'); 
 const forumBiz = require('./biz/forum.js'); 
+const notificationsBiz = require('./biz/notifications.js'); 
 
 // track state of db to reject certain operations 
 // CHANGE THESE VALUES IF SERVER IS STARTED WITH AN EMPTY OR CLEARED DATABASE
@@ -349,6 +350,15 @@ app.get('/threadComments', function(request, response) {
         sendResponse(response, statusCode, respBody); 
     }); 
 }); 
+
+
+// _______________________________________________ Notifications ______________________________________________________
+app.get('/notifications', function(request, response) {
+    // Retrieves all notifications for a single user and sets all new notifications to old. 
+    notificationsBiz.getAllUserNotifs(isLoggedIn, userLoggedIn, dbFilled, function(statusCode, respBody) {
+        sendResponse(response, statusCode, respBody); 
+    }); 
+});
 
 
 

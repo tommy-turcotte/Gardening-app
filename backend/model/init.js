@@ -17,6 +17,7 @@ const watchers = require('./watchlist.js');
 const crops = require('./crops.js'); 
 const yields = require('./yields.js'); 
 const forum = require('./forum.js'); 
+const notifications = require('./notifications.js'); 
 
 // Connect to the database 
 const db = new sqlite3.Database('./data/database.db', (error) => {
@@ -306,7 +307,7 @@ function fillDB() {
     }
     locations.insertLocations(locations_); 
 
-    // add two new locations to user1's watchlist 
+    // add three new locations to user1's watchlist 
     let location1 = {
         "longitude": 21.11111,
         "latitude": -12.34324,
@@ -333,11 +334,27 @@ function fillDB() {
         "temperature": 43,
         "humidity": 68.9,
         "rainfall": 140.2,
-        "recommended_crop": "coffee",
+        "recommended_crop": "banana",
         "name": null
     };
     locations.insertLocation(location2);
     watchers.insertWatcher({'username': username1, 'longitude': location2.longitude, 'latitude': location2.latitude});
+
+    let location3 = {
+        "longitude": 68.321,
+        "latitude": -1.11,
+        "k_lvl": 42,
+        "n_lvl": 60,
+        "p_lvl": 30,
+        "ph": 7.0,
+        "temperature": 38,
+        "humidity": 102.1,
+        "rainfall": 180.3,
+        "recommended_crop": "apple",
+        "name": null
+    };
+    locations.insertLocation(location3);
+    watchers.insertWatcher({'username': username1, 'longitude': location3.longitude, 'latitude': location3.latitude});
 
     // fill crops table 
     let cropNames = [
@@ -381,7 +398,7 @@ function fillDB() {
         }
     }
 
-    // add crop/yield data for user1's watched locations 
+    // add crop/yield data for two of user1's watched locations 
     let loc1Crop1 = {
         "longitude": location1.longitude,
         "latitude": location1.latitude,
@@ -473,6 +490,29 @@ function fillDB() {
         'last_updated_dt': thread2Timings, 
     }; 
     forum.addComment(thread2Comment); 
+
+    // add a notification for two of user1's watched locations 
+    let loc1NotificationFields = {
+        'ID': 'z3gf55f5-945e-41d0-8fe1-ebe3b8c54ee5',
+        'username': username1,
+        'longitude': location1.longitude,
+        'latitude': location1.latitude,
+        'text': 'New crop added to this location: watermelon',
+        'date_time': (new Date()).toISOString(),
+        'new': true 
+    }; 
+    notifications.insertNotification(loc1NotificationFields); 
+
+    let loc2NotificationFields = {
+        'ID': 'yygf55f5-945e-41d0-8fe1-ebe3b8c54ee5',
+        'username': username1,
+        'longitude': location2.longitude,
+        'latitude': location2.latitude,
+        'text': 'Recommended crop for this location has changed to banana',
+        'date_time': (new Date()).toISOString(),
+        'new': true 
+    }; 
+    notifications.insertNotification(loc2NotificationFields); 
 }
 
 
