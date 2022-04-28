@@ -67,9 +67,50 @@ The frontend runs on port `8080`.
 
 ## Pages and System Functions
 ### Home Page 
+Greeting page of the project. User can click through the tiles to see a preview of each main feature.
+
+![Alt text](/frontend/src/assets/home_demo.png?raw=true "Title")
 
 ### Watchlist Page 
 
+User can build a table of their watched locations with whichever attributes they want (selected in the dropdown). Clicking a column in the table generates a visualization for the column's data.
+
+![Alt text](/frontend/src/assets/watchlist_demo.png?raw=true "Title")
+
 ### Account Page 
 
+Users can see their account data. Accessed from the Profile dropdown menu.
+
+![Alt text](/frontend/src/assets/account_demo.png?raw=true "Title")
+
 ### Authentication (Login, logout, register) 
+
+Users can login and register when they are logged out, and have the option to log out in the profile dropdown menu when they are logged in.
+
+![Alt text](/frontend/src/assets/login_demo.png?raw=true "Title") 
+
+![Alt text](/frontend/src/assets/register_demo.png?raw=true "Title")
+
+### Crops And Yields Page
+
+Users select a row from their watched locations and a table will be build showing the crops and associated yields for that location. The user additionally have the option to add a new crop and yield item to the database.
+
+![Alt text](/frontend/src/assets/cropyield_demo.png?raw=true "Title")
+
+### Search Page
+
+Users can search for a crop. They can enter any amount of parameters they desire.
+
+![Alt text](/frontend/src/assets/search_demo.png?raw=true "Title")
+
+### Notifications Page
+
+Users will be shown their list of notifications. Filled color notifications are new and light notifications are old.
+
+![Alt text](/frontend/src/assets/notification_demo.png?raw=true "Title")
+
+### Add Location Page
+
+Users need to enter their location as well as all soil parameters for their location. They will also have the choice to add the location to their watch list before submitting.
+
+![Alt text](/frontend/src/assets/location_demo.png?raw=true "Title")

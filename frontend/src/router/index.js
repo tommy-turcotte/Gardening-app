@@ -8,6 +8,8 @@ import Logout from '../views/LogoutView.vue'
 import WatchList from '../views/WatchlistView.vue'
 import Location from '../views/LocationView.vue'
 import Cropyield from '../views/CropyieldView.vue'
+import Notification from '../views/NotificationView.vue'
+import Search from '../views/SearchView.vue'
 
 const routes = [
   {
@@ -54,6 +56,16 @@ const routes = [
     path: '/Cropyield',
     name: 'Cropyield',
     component: Cropyield
+  },
+  {
+    path: '/Notification',
+    name: 'Notification',
+    component: Notification
+  },
+  {
+    path: '/Search',
+    name: 'Search',
+    component: Search
   }
 ]
 

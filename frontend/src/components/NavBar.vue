@@ -18,9 +18,7 @@
 
         <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Watch-List">Watch List</router-link>
         <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Cropyield">Crops And Yields</router-link>
-        <a class="navbar-item is-size-4">
-         Search
-        </a>
+        <router-link class="navbar-item is-size-4" to="/Search">Search</router-link>
         <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Location">Add Location</router-link>
         <div v-if="isloggedin === true" class="navbar-item has-dropdown is-hoverable">
           <a class="navbar-link is-size-4">
@@ -28,6 +26,7 @@
           </a>
           <div class="navbar-dropdown is-dark">
             <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Account">Account</router-link>
+            <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Notification">Notifications</router-link>
             <router-link v-if="isloggedin === true" class="navbar-item is-size-4" to="/Logout">Log out</router-link>
           </div>          
         </div>
